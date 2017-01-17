@@ -159,11 +159,7 @@ int MiniMax(Board b)
     return bestMove;
 }
 
-///
-/// \brief monteCarlo
-/// \param b
-/// \return aantal gewonnen gesimuleerde matches van speler die aan beurt is min die van de tegenstander gedeeld door aantal gesimuleerde matches.
-///
+/*
 double monteCarlo(Board board, int player)//vult het bord met willekeurig geplaatste stukken van de maximizing en minimizing speler
 {
     std::cout << "carlo begint"<<std::endl;
@@ -219,7 +215,7 @@ double monteCarlo(Board board, int player)//vult het bord met willekeurig geplaa
     }
     std::cout << "carlo eindigt"<<std::endl;
     return maximizerWins / minimizerWins ;
-}
+}*/
 
 
 
