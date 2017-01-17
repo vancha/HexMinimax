@@ -11,7 +11,8 @@
 using namespace std;
 
 
-/**
+/* if the boar is 9 x 9, it looks like this:
+
 
 0   1   2   3   4   5   6   7   8
 
@@ -31,7 +32,7 @@ using namespace std;
 
                 72  73  74  75  76  77  78  79  80
 
-**/
+*/
 
 Board b;
 int MiniMax(Board b);
@@ -45,33 +46,38 @@ int main()
 {
     while(true)
     {
+        b.Print();
         if(b.hasWinner() == 3 || b.hasWinner() == 4)
         {
             std::cout << "game over"<<std::endl;
             break;
         }
         int x = 0;
-        std::cout << "place your move(row first, column will be asked for next"<<std::endl;
+        std::cout << "input row: "<<std::endl;
         cin >> x;
         int y = 0;
-        std::cout << "place your move(column now"<<std::endl;
+        std::cout << "input column: "<<std::endl;
         cin >> y;
-        std::cout << "current value is : "<< b.getCell(x*SIZE+y);
         if(b.getCell(x*SIZE+y) != 0)
         {
-            std::cout << "field not empty, try again. row:" <<std::endl;
+            std::cout << "field not empty, try again." <<std::endl;
             continue;
         }
         b.placeMove(x,y,3);
         b.nextPlayerTurn();
-        b.placeMove(MiniMax(b),4);
-        b.Print();
-        b.nextPlayerTurn();
-       // b.Print();
-    }
-    std::cout << b.hasWinner() << std::endl;
+        if(b.hasWinner() == -1)
+        {
+            std::cout << "LOADING..."<< std::endl;
 
-    //std::cout << "result:" << monteCarlo(b,3) << std::endl;
+            b.placeMove(MiniMax(b),4);
+            b.Print();
+            b.nextPlayerTurn();
+        }
+        else
+        {
+            cout << "congrats, you won!" << endl;
+        }
+    }
 }
 
 int EvalueateStaticPosition(Board b)
@@ -89,25 +95,19 @@ void retractMove(Board b, int move)
 
 int minMove(Board b, int* bestMove)
 {
-    std::cout << "minmove" << std::endl;
     if(b.hasWinner() != -1)
     {
-        std::cout << "win" << std::endl;
         return EvalueateStaticPosition(b);
     }
-    std::cout << "make move list" << std::endl;
     vector<int> movelists = b.getEmptyCells();
 
 
     int nMoves = movelists.size();
-    std::cout << "moves: " << nMoves << std::endl;
     int v = std::numeric_limits<int>::max();
-    std::cout << "before for" << std::endl;
     for(int i = 0; i < nMoves;i++)
     {
         int move = movelists.at(i);
         b.placeMove(move, 4);
-        //int opponentsBestMove = 0;
         b.nextPlayerTurn();
         int curRating = maxMove(b, bestMove);
         if(curRating < v)
@@ -122,21 +122,18 @@ int minMove(Board b, int* bestMove)
 
 int maxMove(Board b, int* bestMove)
 {
-    std:cout << "maxmove" << std::endl;
-    if(b.hasWinner() != -1)//als er een winnaar is
+    if(b.hasWinner() != -1)
     {
-        return EvalueateStaticPosition(b);//return -10 if minimizing player wins, 10 for maximizing player
+        return EvalueateStaticPosition(b);
     }
 
     vector<int> movelists = b.getEmptyCells();
     int nMoves = movelists.size();
-    std::cout << "moves: " << nMoves << std::endl;
     int v = std::numeric_limits<int>::min();
     for(int i = 0; i < nMoves;i++)
     {
         int move = movelists.at(i);
         b.placeMove(move, 3);
-        //int opponentsBestMove = 0;
         b.nextPlayerTurn();
         int curRating = minMove(b, bestMove);
         if(curRating > v)
@@ -144,40 +141,21 @@ int maxMove(Board b, int* bestMove)
             v = curRating;
             *bestMove = move;
         }
-        retractMove(b,move);//zet de ingevulde waarde van het bord weer op 0;
+        retractMove(b,move);
     }
-    //delete movelists;
     return v;
 }
-/* MiniMax(Board)
-best.mv= [not yet defined]
-best.score= -9999
-For each legal move m
-{
-    make move m.mv on Board
-    m.score = MIN
-    if (m.score>best.score)then best=m
-    retract move m.mv
-    on Board
-}
-Make move best.mv
-*/
 
 int MiniMax(Board b)
 {
     int bestMove = 0;
-    int bestScore = std::numeric_limits<int>::min();
-    /*for(int m : b.getEmptyCells())
-    {
-        b.placeMove(m, 4);
-        bestScore = minMove(b,&bestMove);
-        //if(bestScore )
-    }*/
+    //int bestScore = std::numeric_limits<int>::min();
+    int bestScore = 0;
     if(b.GetPlayerTurn() == MaximizingPlayer)
         bestScore = maxMove(b, &bestMove);
     if(b.GetPlayerTurn() == MinimazingPlayer)
         bestScore = minMove(b, &bestMove);
-    std:cout << "bestScore is " << bestScore << std::endl;
+    //std:cout << "bestScore is " << bestScore << std::endl;
     return bestMove;
 }
 
