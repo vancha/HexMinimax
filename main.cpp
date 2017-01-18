@@ -35,11 +35,11 @@ using namespace std;
 */
 
 Board b;
-int MiniMax(Board b);
+int MiniMax(Board b, int depth);
 int playerTurn = MaximizingPlayer;
 double monteCarlo(Board b, int playerTurn);
-int minMove(Board b, int* Move);
-int maxMove(Board b, int* Move);
+int minMove(Board b, int* Move, int depth);
+int maxMove(Board b, int* Move, int depth);
 
 
 int main()
@@ -52,24 +52,25 @@ int main()
             std::cout << "game over"<<std::endl;
             break;
         }
-        int x = 0;
-        std::cout << "input row: "<<std::endl;
-        cin >> x;
-        int y = 0;
-        std::cout << "input column: "<<std::endl;
-        cin >> y;
-        if(b.getCell(x*SIZE+y) != 0)
-        {
-            std::cout << "field not empty, try again." <<std::endl;
-            continue;
-        }
-        b.placeMove(x,y,3);
+//        int x = 0;
+//        std::cout << "input row: "<<std::endl;
+//        cin >> x;
+//        int y = 0;
+//        std::cout << "input column: "<<std::endl;
+//        cin >> y;
+//        if(b.getCell(x*SIZE+y) != 0)
+//        {
+//            std::cout << "field not empty, try again." <<std::endl;
+//            continue;
+//        }
+        //b.placeMove(x,y,3);
+        b.placeMove(MiniMax(b, 4), 3);
         b.nextPlayerTurn();
         if(b.hasWinner() == -1)
         {
             std::cout << "LOADING..."<< std::endl;
 
-            b.placeMove(MiniMax(b),4);
+            b.placeMove(MiniMax(b,4),4);
             b.Print();
             b.nextPlayerTurn();
         }
@@ -93,7 +94,7 @@ void retractMove(Board b, int move)
     b.undoMove(move);
 }
 
-int minMove(Board b, int* bestMove)
+int minMove(Board b, int* bestMove, int depth)
 {
     if(b.hasWinner() != -1)
     {
@@ -109,7 +110,7 @@ int minMove(Board b, int* bestMove)
         int move = movelists.at(i);
         b.placeMove(move, 4);
         b.nextPlayerTurn();
-        int curRating = maxMove(b, bestMove);
+        int curRating = maxMove(b, bestMove, depth-1);
         if(curRating < v)
         {
             v = curRating;
@@ -120,7 +121,7 @@ int minMove(Board b, int* bestMove)
     return v;
 }
 
-int maxMove(Board b, int* bestMove)
+int maxMove(Board b, int* bestMove, int depth)
 {
     if(b.hasWinner() != -1)
     {
@@ -135,7 +136,7 @@ int maxMove(Board b, int* bestMove)
         int move = movelists.at(i);
         b.placeMove(move, 3);
         b.nextPlayerTurn();
-        int curRating = minMove(b, bestMove);
+        int curRating = minMove(b, bestMove, depth-1);
         if(curRating > v)
         {
             v = curRating;
@@ -146,20 +147,20 @@ int maxMove(Board b, int* bestMove)
     return v;
 }
 
-int MiniMax(Board b)
+int MiniMax(Board b, int depth)
 {
     int bestMove = 0;
     //int bestScore = std::numeric_limits<int>::min();
-    int bestScore = 0;
+    int i = 0;
     if(b.GetPlayerTurn() == MaximizingPlayer)
-        bestScore = maxMove(b, &bestMove);
+        i = maxMove(b, &bestMove, depth);
     if(b.GetPlayerTurn() == MinimazingPlayer)
-        bestScore = minMove(b, &bestMove);
+        i = minMove(b, &bestMove, depth);
     //std:cout << "bestScore is " << bestScore << std::endl;
     return bestMove;
 }
 
-/*
+
 double monteCarlo(Board board, int player)//vult het bord met willekeurig geplaatste stukken van de maximizing en minimizing speler
 {
     std::cout << "carlo begint"<<std::endl;
@@ -215,7 +216,7 @@ double monteCarlo(Board board, int player)//vult het bord met willekeurig geplaa
     }
     std::cout << "carlo eindigt"<<std::endl;
     return maximizerWins / minimizerWins ;
-}*/
+}
 
 
 
