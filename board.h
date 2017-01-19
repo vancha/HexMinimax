@@ -6,7 +6,7 @@
 #include <set>
 #include <vector>
 #include <quickunionunionfind.h>
-#define SIZE 3
+#define SIZE 5
 
 #define MaximizingPlayer 3
 #define MinimazingPlayer 4

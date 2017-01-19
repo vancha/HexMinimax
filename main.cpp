@@ -70,8 +70,9 @@ int main()
         {
             std::cout << "LOADING..."<< std::endl;
 
-            int x = negaMax(b);
+            //int x = negaMax(b);
             b.placeMove(MiniMax(b,10),4);
+            //b.placeMove(x,4);
             b.Print();
             b.nextPlayerTurn();
         }
