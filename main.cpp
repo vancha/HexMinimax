@@ -6,7 +6,7 @@
 #include "quickfindunionfind.h"
 #include <limits>
 #include "quickunionunionfind.h"
-
+#include <unistd.h>
 
 using namespace std;
 
@@ -36,6 +36,7 @@ using namespace std;
 
 Board b;
 int MiniMax(Board b, int depth);
+int negaMax(Board b);
 int playerTurn = MaximizingPlayer;
 double monteCarlo(Board b, int playerTurn);
 int minMove(Board b, int* Move, int depth);
@@ -52,25 +53,25 @@ int main()
             std::cout << "game over"<<std::endl;
             break;
         }
-//        int x = 0;
-//        std::cout << "input row: "<<std::endl;
-//        cin >> x;
-//        int y = 0;
-//        std::cout << "input column: "<<std::endl;
-//        cin >> y;
-//        if(b.getCell(x*SIZE+y) != 0)
-//        {
-//            std::cout << "field not empty, try again." <<std::endl;
-//            continue;
-//        }
-        //b.placeMove(x,y,3);
-        b.placeMove(MiniMax(b, 4), 3);
+        int x = 0;
+        std::cout << "input row: "<<std::endl;
+        cin >> x;
+        int y = 0;
+        std::cout << "input column: "<<std::endl;
+        cin >> y;
+        if(b.getCell(x*SIZE+y) != 0)
+        {
+            std::cout << "field not empty, try again." <<std::endl;
+            continue;
+        }
+        b.placeMove(x,y,3);
         b.nextPlayerTurn();
         if(b.hasWinner() == -1)
         {
             std::cout << "LOADING..."<< std::endl;
 
-            b.placeMove(MiniMax(b,4),4);
+            int x = negaMax(b);
+            b.placeMove(MiniMax(b,10),4);
             b.Print();
             b.nextPlayerTurn();
         }
@@ -105,9 +106,9 @@ int minMove(Board b, int* bestMove, int depth)
 
     int nMoves = movelists.size();
     int v = std::numeric_limits<int>::max();
-    for(int i = 0; i < nMoves;i++)
+    for(int i : movelists)
     {
-        int move = movelists.at(i);
+        int move = i;
         b.placeMove(move, 4);
         b.nextPlayerTurn();
         int curRating = maxMove(b, bestMove, depth-1);
@@ -128,12 +129,13 @@ int maxMove(Board b, int* bestMove, int depth)
         return EvalueateStaticPosition(b);
     }
 
+
     vector<int> movelists = b.getEmptyCells();
     int nMoves = movelists.size();
     int v = std::numeric_limits<int>::min();
-    for(int i = 0; i < nMoves;i++)
+    for(int i : movelists)
     {
-        int move = movelists.at(i);
+        int move = i;
         b.placeMove(move, 3);
         b.nextPlayerTurn();
         int curRating = minMove(b, bestMove, depth-1);
@@ -160,6 +162,75 @@ int MiniMax(Board b, int depth)
     return bestMove;
 }
 
+/*int negaMax( int depth ) {
+    if ( depth == 0 ) return evaluate();
+    int max = -oo;
+    generateMoves(...);
+    while ( m = getNextMove(...) )  {
+        makeMove(m);
+        score = -negaMax( depth - 1 );
+        unmakeMove(m);
+        if( score > max )
+            max = score;
+    }
+    return max;
+}
+
+
+^^^^^^this one is implememnted^^^^^
+
+ function negamax(node, depth, α, β, color)
+     if depth = 0 or node is a terminal node
+         return color * the heuristic value of node
+
+     childNodes := GenerateMoves(node)
+     childNodes := OrderMoves(childNodes)
+     bestValue := −∞
+     foreach child in childNodes
+         v := −negamax(child, depth − 1, −β, −α, −color)
+         bestValue := max( bestValue, v )
+         α := max( α, v )
+         if α ≥ β
+             break
+     return bestValue
+
+
+Initial call for Player A's root node
+rootNegamaxValue := negamax( rootNode, depth, −∞, +∞, 1)
+
+*/
+
+int negaMax(Board b)
+{
+    if(b.hasWinner() != -1)
+    {
+        return EvalueateStaticPosition(b);
+    }
+    int bestMove = 0;
+    //if ( depth == 0)
+    //{
+       // return EvalueateStaticPosition(b);
+    //}
+    int max = std::numeric_limits<int>::min();
+
+    for ( int i : b.getEmptyCells())
+    {
+        b.placeMove(i, b.GetPlayerTurn());
+        b.nextPlayerTurn();
+        int score = -negaMax(b);
+        b.undoMove(i);
+        if( score > max )
+        {
+           // cout << score << "is bigger then " << max << endl;
+            max = score;
+            bestMove = i;
+
+        }
+        //usleep(1000);
+
+    }
+    return bestMove;
+}
 
 double monteCarlo(Board board, int player)//vult het bord met willekeurig geplaatste stukken van de maximizing en minimizing speler
 {
