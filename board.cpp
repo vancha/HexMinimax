@@ -100,7 +100,7 @@ bool Board::hasEmptyCells()
     }
 }
 
-int Board::threeWon()
+int Board::maximizerWon()
 {
     QuickUnionUnionFind* quuf = new QuickUnionUnionFind(SIZE * SIZE);
     for(int i = 0; i < SIZE*SIZE;i++)
@@ -111,7 +111,7 @@ int Board::threeWon()
         {
             int westNeighbour = oneDimensionalPosition-1;
             //if(board[oneDimensionalPosition] == board[westNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 3 && board[westNeighbour] == 3)
+            if(board[oneDimensionalPosition] == MaximizingPlayer && board[westNeighbour] == MaximizingPlayer)
             {
 
                 quuf->Qunion(oneDimensionalPosition, westNeighbour);
@@ -121,7 +121,7 @@ int Board::threeWon()
         {
             int EastNeighbour = oneDimensionalPosition+1;
             //if(board[oneDimensionalPosition] == board[EastNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 3 && board[EastNeighbour]  == 3)
+            if(board[oneDimensionalPosition] == MaximizingPlayer && board[EastNeighbour]  == MaximizingPlayer)
             {
                 quuf->Qunion(oneDimensionalPosition, EastNeighbour);
             }
@@ -130,7 +130,7 @@ int Board::threeWon()
         {
             int southEastNeighbour = oneDimensionalPosition+SIZE;
             //if(board[oneDimensionalPosition] == board[southEastNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 3 && board[southEastNeighbour] == 3)
+            if(board[oneDimensionalPosition] == MaximizingPlayer && board[southEastNeighbour] == MaximizingPlayer)
             {
                 //cout << oneDimensionalPosition << "'s southEastNeighbour is " << southEastNeighbour << endl;
                 quuf->Qunion(oneDimensionalPosition, southEastNeighbour);
@@ -140,7 +140,7 @@ int Board::threeWon()
         {
             int southWestNeighbour = oneDimensionalPosition+(SIZE-1);
             //if(board[oneDimensionalPosition] == board[southWestNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 3 && board[southWestNeighbour] == 3)
+            if(board[oneDimensionalPosition] == MaximizingPlayer && board[southWestNeighbour] == MaximizingPlayer)
             {
                 //cout << oneDimensionalPosition << "'s southWestNeighbour is " << southWestNeighbour << endl;
                 quuf->Qunion(oneDimensionalPosition, southWestNeighbour);
@@ -151,7 +151,7 @@ int Board::threeWon()
         {
             int northEastNeighbour = (oneDimensionalPosition-(SIZE))+1;
             //if(board[oneDimensionalPosition] == board[northEastNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 3 && board[northEastNeighbour] == 3)
+            if(board[oneDimensionalPosition] == MaximizingPlayer && board[northEastNeighbour] == MaximizingPlayer)
             {
                 //cout << oneDimensionalPosition << "'s northEastNeighbour is " << northEastNeighbour << endl;
                 quuf->Qunion(oneDimensionalPosition, northEastNeighbour);
@@ -162,7 +162,7 @@ int Board::threeWon()
         {
             int northWestNeighbour = (oneDimensionalPosition-SIZE);
             //if(board[oneDimensionalPosition] == board[northWestNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 3 && board[northWestNeighbour] == 3)
+            if(board[oneDimensionalPosition] == MaximizingPlayer && board[northWestNeighbour] == MaximizingPlayer)
             {
                 //cout << oneDimensionalPosition << "'s northWestNeighbour is " << northWestNeighbour << endl;
                 quuf->Qunion(oneDimensionalPosition, northWestNeighbour);
@@ -179,9 +179,9 @@ int Board::threeWon()
             {
                 delete quuf;
                 //std::cout << "de verbonden getallen zijn  " << i << " en " << j << " verticaal" << std::endl;
-                if(this->getCell(i) == 3)//3 is the player who should play from top to bottom
+                if(this->getCell(i) == MaximizingPlayer)//3 is the player who should play from top to bottom
                 {
-                    return 3;
+                    return MaximizingPlayer;
                 }
             }
         }
@@ -190,7 +190,7 @@ int Board::threeWon()
     return -1;
 }
 
-int Board::fourWon()
+int Board::minimizerWon()
 {
     QuickUnionUnionFind* quuf = new QuickUnionUnionFind(SIZE * SIZE);
     for(int i = 0; i < SIZE*SIZE;i++)
@@ -201,7 +201,7 @@ int Board::fourWon()
         {
             int westNeighbour = oneDimensionalPosition-1;
             //if(board[oneDimensionalPosition] == board[westNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 4 && board[westNeighbour] == 4)
+            if(board[oneDimensionalPosition] == MinimazingPlayer && board[westNeighbour] == MinimazingPlayer)
             {
 
                 quuf->Qunion(oneDimensionalPosition, westNeighbour);
@@ -211,7 +211,7 @@ int Board::fourWon()
         {
             int EastNeighbour = oneDimensionalPosition+1;
             //if(board[oneDimensionalPosition] == board[EastNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 4 && board[EastNeighbour]  == 4)
+            if(board[oneDimensionalPosition] == MinimazingPlayer && board[EastNeighbour]  == MinimazingPlayer)
             {
                 quuf->Qunion(oneDimensionalPosition, EastNeighbour);
             }
@@ -220,7 +220,7 @@ int Board::fourWon()
         {
             int southEastNeighbour = oneDimensionalPosition+SIZE;
             //if(board[oneDimensionalPosition] == board[southEastNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 4 && board[southEastNeighbour] == 4)
+            if(board[oneDimensionalPosition] == MinimazingPlayer && board[southEastNeighbour] == MinimazingPlayer)
             {
                 //cout << oneDimensionalPosition << "'s southEastNeighbour is " << southEastNeighbour << endl;
                 quuf->Qunion(oneDimensionalPosition, southEastNeighbour);
@@ -230,7 +230,7 @@ int Board::fourWon()
         {
             int southWestNeighbour = oneDimensionalPosition+(SIZE-1);
             //if(board[oneDimensionalPosition] == board[southWestNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 4 && board[southWestNeighbour] == 4)
+            if(board[oneDimensionalPosition] == MinimazingPlayer && board[southWestNeighbour] == MinimazingPlayer)
             {
                 //cout << oneDimensionalPosition << "'s southWestNeighbour is " << southWestNeighbour << endl;
                 quuf->Qunion(oneDimensionalPosition, southWestNeighbour);
@@ -241,7 +241,7 @@ int Board::fourWon()
         {
             int northEastNeighbour = (oneDimensionalPosition-(SIZE))+1;
             //if(board[oneDimensionalPosition] == board[northEastNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 4 && board[northEastNeighbour] == 4)
+            if(board[oneDimensionalPosition] == MinimazingPlayer && board[northEastNeighbour] == MinimazingPlayer)
             {
                 //cout << oneDimensionalPosition << "'s northEastNeighbour is " << northEastNeighbour << endl;
                 quuf->Qunion(oneDimensionalPosition, northEastNeighbour);
@@ -252,7 +252,7 @@ int Board::fourWon()
         {
             int northWestNeighbour = (oneDimensionalPosition-SIZE);
             //if(board[oneDimensionalPosition] == board[northWestNeighbour] && board[oneDimensionalPosition] != 0)
-            if(board[oneDimensionalPosition] == 4 && board[northWestNeighbour] == 4)
+            if(board[oneDimensionalPosition] == MinimazingPlayer && board[northWestNeighbour] == MinimazingPlayer)
             {
                 //cout << oneDimensionalPosition << "'s northWestNeighbour is " << northWestNeighbour << endl;
                 quuf->Qunion(oneDimensionalPosition, northWestNeighbour);
@@ -270,9 +270,9 @@ int Board::fourWon()
             {
                 delete quuf;
                 //std::cout << "de verbonden getallen zijn  " << k << " en " << l <<" horizontaal"<< std::endl;
-                if(this->getCell(l) == 4)//4 should play from left to right.
+                if(this->getCell(l) == MinimazingPlayer)//4 should play from left to right.
                 {
-                    return 4;
+                    return MinimazingPlayer;
                 }
             }
         }
@@ -283,20 +283,20 @@ int Board::fourWon()
 int Board::hasWinner()
 {
     //std::cout << "begin check"<<std::endl;
-    if(threeWon() == 3)
+    if(maximizerWon() == MaximizingPlayer)
     {
         //this->Print();
 
         //cout << "it's three" << endl;
         //exit(0);
-        return 3;
+        return MaximizingPlayer;
     }
-    if(fourWon() == 4)
+    if(minimizerWon() == MinimazingPlayer)
     {
         //this->Print();
         //cout << "it's four" << endl;
         //exit(0);
-        return 4;
+        return MinimazingPlayer;
     }
     return -1;
     //std::cout << "end check" <<std::endl;

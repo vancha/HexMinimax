@@ -6,10 +6,10 @@
 #include <set>
 #include <vector>
 #include <quickunionunionfind.h>
-#define SIZE 5
+#define SIZE 4
 
 #define MaximizingPlayer 3
-#define MinimazingPlayer 4
+#define MinimazingPlayer -3
 
 using namespace std;
 
@@ -28,8 +28,8 @@ public:
     vector<int> getEmptyCells();
     void nextPlayerTurn();
     void undoMove(int i);
-    int threeWon();
-    int fourWon();
+    int maximizerWon();
+    int minimizerWon();
     void undoMove(int i, int j);
     bool hasEmptyCells();
     int getCell(int x, int y);
